@@ -1,0 +1,47 @@
+@import url("https://unpkg.com/milligram@1.4.1/dist/milligram.css");
+@import url("https://unpkg.com/flatpickr@4.6.9/dist/flatpickr.min.css");
+
+div#rootDiv:empty {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+div#rootDiv:empty::before {
+  content: "Loading\00a0\00a0\00a0";
+  animation: loadingDots 1.5s linear infinite;
+  margin: auto;
+  font-size: 3rem;
+}
+
+@keyframes loadingDots {
+  25% {
+    content: "Loading\00a0\00a0\00a0";
+  }
+  50% {
+    content: "Loading.\00a0\00a0";
+  }
+  75% {
+    content: "Loading..\00a0";
+  }
+  100% {
+    content: "Loading...";
+  }
+}
+
+.pair {
+  border: 0.1rem solid black;
+  padding: 1em;
+  margin: 1em auto 1em auto;
+  border-radius: 0.5em;
+}
+
+.pair:hover {
+  border: 0.1em solid #9b4dca;
+  border-radius: 0.75em;
+}
+
+.app {
+  width: 90%;
+  margin: auto
+}
