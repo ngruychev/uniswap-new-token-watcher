@@ -11,7 +11,7 @@ div#rootDiv:empty::before {
   content: "Loading\00a0\00a0\00a0";
   animation: loadingDots 1.5s linear infinite;
   margin: auto;
-  font-size: 3rem;
+  font-size: 3em;
 }
 
 @keyframes loadingDots {
@@ -29,15 +29,15 @@ div#rootDiv:empty::before {
   }
 }
 
-.pair {
-  border: 0.1rem solid black;
+.result {
+  border: 0.1em solid black;
   padding: 1em;
   margin: 1em auto 1em auto;
   border-radius: 0.5em;
 }
 
-.pair:hover {
-  border: 0.1em solid #9b4dca;
+.result:hover {
+  border-color: #9b4dca;
   border-radius: 0.75em;
 }
 
