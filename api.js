@@ -62,7 +62,7 @@ async function paginatedPairsWithTxCount1(
   return [all, minBlockNum];
 }
 
-export async function newTokensSince(timestamp, isv3 = false, mbn) {
+export async function newTokensSince(timestamp, isv3 = false, mbn = 0) {
   const [pairs, minBlockNum] = await paginatedPairsWithTxCount1(
     timestamp,
     isv3,

@@ -1,13 +1,13 @@
-import "https://cdn.skypack.dev/preact@10.5.13/debug";
-import { render } from "https://cdn.skypack.dev/preact@10.5.13";
+import "https://cdn.skypack.dev/preact@v10.5.13/debug";
+import { render } from "https://cdn.skypack.dev/preact@v10.5.13";
 import {
   useEffect,
   useRef,
   useState,
-} from "https://cdn.skypack.dev/preact@10.5.13/hooks";
-import { html } from "https://cdn.skypack.dev/htm@3.0.4/preact";
-import flatpickr from "https://cdn.skypack.dev/flatpickr@4.6.9";
-import * as timeago from "https://cdn.skypack.dev/timeago.js@4.0.2";
+} from "https://cdn.skypack.dev/preact@v10.5.13/hooks";
+import { html } from "https://cdn.skypack.dev/htm@v3.0.4/preact";
+import flatpickr from "https://cdn.skypack.dev/flatpickr@v4.6.9";
+import * as timeago from "https://cdn.skypack.dev/timeago.js@v4.0.2";
 import { newTokensSince } from "./api.js";
 
 const appStartTime = Math.floor(Date.now() / 1000);
@@ -28,12 +28,30 @@ const urls = {
   },
 };
 
-function TimeAgo({ timestamp, update = 1000 }) {
-  const [timeAgo, setTimeAgo] = useState("");
+// https://overreacted.io/making-setinterval-declarative-with-react-hooks/
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
   useEffect(() => {
-    const interval = setInterval(() => setTimeAgo(timeago.format(timestamp)));
-    return () => clearInterval(interval);
-  }, []);
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
+function TimeAgo({ timestamp, update = 1000 }) {
+  const [timeAgo, setTimeAgo] = useState(timeago.format(timestamp));
+  useInterval(() => setTimeAgo(timeago.format(timestamp)), update);
   return html`${timeAgo}`;
 }
 
@@ -41,52 +59,43 @@ function Result(
   {
     token,
     pair,
-    uniswapVersion = "v2",
+    uniVer = "v2",
   },
 ) {
+  const when = new Date(pair.createdAtTimestamp * 1000);
   return html`
   <div class="result">
     <div>
       <b>${token.symbol}</b> (${token.name})
       <br/>
-      <b>ID:</b> ${token.id} (<a href=${
-    urls.token.uniswap[uniswapVersion](token.id)
-  }>Uniswap</a> <a href=${urls.token.etherscan(token.id)}>Etherscan</a>)
-    <//>
+      <b>ID:</b> <code>${token.id}</code>
+      (<a href=${urls.token.uniswap[uniVer](token.id)}>Uniswap</a>
+      ${" "}
+      <a href=${urls.token.etherscan(token.id)}>Etherscan</a>)
+    </div>
     <br/>
     <b>Pair:</b> ${pair.token0.symbol} / ${pair.token1.symbol} (${pair.token0.name} / ${pair.token1.name})
     <br/>
-    <b>Pair ID:</b> ${pair.id} (<a href=${
-    urls.pair.uniswap[uniswapVersion](pair.id)
-  }>Uniswap</a>)
+    <b>Pair ID:</b> <code>${pair.id}</code> (
+      <a href=${urls.pair.uniswap[uniVer](pair.id)}>Uniswap</a>
+      )
     <br/>
-    <b>Date:</b> ${
-    new Date(pair.createdAtTimestamp * 1000).toString()
-  } (<b><${TimeAgo} timestamp=${pair.createdAtTimestamp * 1000}/></b>)
+    <b>Date:</b> ${when.toString()} (<b><${TimeAgo} timestamp=${when}/></b>)
+    <br/>
+    <b>Block ID:</b> <code>${pair.createdAtBlockNumber}</code>
   </div>
   `;
 }
 
-function Results({ results, uniswapVersion = "v2" }) {
+function Results({ results, uniVer = "v2" }) {
   return html`
   <div class="results">
     ${
     results.map((result) =>
-      html
-        `<${Result} key=${result.token.id} ...${result} uniswapVersion=${uniswapVersion}/>`
+      html`<${Result} key=${result.token.id} ...${result} uniVer=${uniVer}/>`
     )
   }
   </div>`;
-}
-
-function VersionPicker(
-  { versions = [["v2", "v2"], ["v3", "v3"]], version, onChange },
-) {
-  return html`
-  <select value=${version} onchange=${(e) => onChange(e.target.value)}>
-    ${versions.map((v) => html`<option value=${v[0]}>${v[1]}</option>`)}
-  </select>
-  `;
 }
 
 function Flatpickr({ value, onChange }) {
@@ -97,6 +106,7 @@ function Flatpickr({ value, onChange }) {
       defaultDate: value * 1000,
       enableTime: true,
       time_24hr: true,
+      disableMobile: true,
       onChange: ([val]) => onChange(Math.floor(val.getTime() / 1000)),
     });
     return () => fpRef.current.destroy();
@@ -105,79 +115,78 @@ function Flatpickr({ value, onChange }) {
     if (!fpRef.current) return;
     fpRef.current.setDate(value * 1000);
   }, [value]);
-  return html`<input ref=${ref}/>`;
-}
-
-function UpdateInterval(
-  {
-    defaultMul = 1000,
-    multipliers = [
-      [1000, "second(s)"],
-      [1000 * 60, "minute(s)"],
-      [1000 * 60 * 60, "hour(s)"],
-    ],
-    value,
-    onChange,
-  },
-) {
-  const [mul, setMul] = useState(defaultMul);
-  const [val, setVal] = useState(value / mul);
-  useEffect(() => {
-    onChange(val * mul);
-  }, [val, mul]);
   return html`
   <div class="row">
-    <input class="column" value=${val} step=${1} min=${1} onchange=${(e) =>
-    setVal(e.target.value)}/>
-    <select class="column" value=${mul} onchange=${(e) =>
-    setMul(e.target.value)}>
-      ${multipliers.map((m) => html`<option value=${m[0]}>${m[1]}</option>`)}
-    </select>
+    <input class="column" ref=${ref}/>
+    <button class="button-clear" onclick=${() =>
+    onChange(Math.floor(Date.now() / 1000))}>Set to now</button>
   </div>
   `;
 }
 
 function App(
-  { defaultRefreshInterval = 3000, defaultSince = appStartTime - 60 * 60 },
+  { defaultRefreshInterval = 5, defaultSince = appStartTime - 60 * 5 },
 ) {
   const [refreshInterval, setRefreshInterval] = useState(
     defaultRefreshInterval,
   );
-  const [uniswapVersion, setUniswapVersion] = useState("v2");
+  const [uniVer, setUniVer] = useState("v3");
   const [data, setData] = useState([]);
   const [since, setSince] = useState(defaultSince);
+  const minBlockNum = useRef(0);
 
-  async function update() {
-    const [resData, minBlockNum] = await newTokensSince(since, uniswapVersion === "v3", 0);
-    setData(resData);
-  }
-  
-  useEffect(() => {
-    update();
-    const interval = setInterval(update, refreshInterval);
-    return () => clearInterval(interval);
-  }, [refreshInterval, since, uniswapVersion]);
+  useEffect(async () => {
+    let res;
+    [res, minBlockNum.current] = await newTokensSince(
+      since,
+      uniVer === "v3",
+    );
+    setData(res);
+  }, [since, uniVer]);
+
+  useInterval(async () => {
+    let res;
+    [res, minBlockNum.current] = await newTokensSince(
+      since,
+      uniVer === "v3",
+      minBlockNum.current,
+    );
+    if (res.length !== 0) setData(data.concat(res));
+  }, refreshInterval * 1000);
 
   return html`
   <div class="app">
-    <div class="row">
+    <nav class="row">
       <div class="column">
-        Version: <${VersionPicker} version=${uniswapVersion} onChange=${setUniswapVersion}/>
+        <label>
+            Version: <select value=${uniVer} onChange=${(e) =>
+    setUniVer(e.target.value)}>
+            <option value="v2">v2</option>
+            <option value="v3">v3</option>
+          </select>
+        </label>
       </div>
       <div class="column">
-        Since: <${Flatpickr} value=${since} onChange=${setSince}/>
+        <label>Since: <${Flatpickr} value=${since} onChange=${setSince}/></label>
       </div>
       <div class="column">
+        <label for="refreshInterval" style=${{ "margin-bottom": "auto" }}>
         Update every:
-        <${UpdateInterval} value=${refreshInterval} onChange=${setRefreshInterval}/>
+        </label>
+        <input id="refreshInterval" type="number" step=${1} min=${1} style=${{
+    width: "auto",
+  }} value=${refreshInterval} onChange=${(e) =>
+    setRefreshInterval(e.target.value)}/> seconds
       </div>
     </div>
-    <${Results} results=${data} uniswapVersion=${uniswapVersion}/>
+    <main>
+      <${Results} results=${data} uniVer=${uniVer}/>
+    </main>
   </div>
   `;
 }
 
 render(
-  html`<${App} defaultRefreshInterval=${15_000}/>`,
+  html`<${App} defaultRefreshInterval=${5}/>`,
   document.getElementById("rootDiv"),
 );
