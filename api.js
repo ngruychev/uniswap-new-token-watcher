@@ -70,6 +70,7 @@ export async function newTokensSince(timestamp, isv3 = false, mbn = 0) {
   );
   const res = pairs
     .filter((p) => p.token0.txCount === "1" || p.token1.txCount === "1")
+    .sort((a, b) => b.createdAtTimestamp - a.createdAtTimestamp)
     .map((pair) =>
       pair.token0.txCount === "1"
         ? { token: pair.token0, pair }

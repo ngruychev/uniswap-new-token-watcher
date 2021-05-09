@@ -1,3 +1,4 @@
+// deno-lint-ignore no-unused-vars
 let DEBUG_MODE = false;
 if (new URLSearchParams(window.location.search).get("debug") !== null) {
   DEBUG_MODE = true;
@@ -31,6 +32,7 @@ const urls = {
       v2: (pair) => `https://v2.info.uniswap.org/pair/${pair}`,
       v3: (pair) => `https://v3.info.uniswap.org/#/pools/${pair}`,
     },
+    etherscan: (pair) => `https://etherscan.io/address/${pair}#tokentxns`,
   },
 };
 
@@ -75,15 +77,17 @@ function Result(
       <b>${token.symbol}</b> (${token.name})
       <br/>
       <b>ID:</b> <code>${token.id}</code>
-      (<a href=${urls.token.uniswap[uniVer](token.id)}>Uniswap</a>
+      (<a href=${urls.token.uniswap[uniVer](token.id)} target="_blank">Uniswap</a>
       ${" "}
-      <a href=${urls.token.etherscan(token.id)}>Etherscan</a>)
+      <a href=${urls.token.etherscan(token.id)} target="_blank">Etherscan</a>)
     </div>
     <br/>
     <b>Pair:</b> ${pair.token0.symbol} / ${pair.token1.symbol} (${pair.token0.name} / ${pair.token1.name})
     <br/>
     <b>Pair ID:</b> <code>${pair.id}</code> (
-      <a href=${urls.pair.uniswap[uniVer](pair.id)}>Uniswap</a>
+      <a href=${urls.pair.uniswap[uniVer](pair.id)} target="_blank">Uniswap</a>
+      ${" "}
+      <a href=${urls.pair.etherscan(pair.id)} target="_blank">Etherscan</a>
       )
     <br/>
     <b>Date:</b> ${when.toString()} (<b><${TimeAgo} timestamp=${when}/></b>)
@@ -149,7 +153,7 @@ function App(
       doNotPaginate ? 0 : minBlockNum.current,
     );
     if (res.length !== 0 || doNotPaginate) {
-      setData((doNotPaginate ? [] : data).concat(res));
+      setData(res.concat(doNotPaginate ? [] : data));
     }
   }
 
