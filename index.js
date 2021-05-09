@@ -29,7 +29,7 @@ const urls = {
   pair: {
     uniswap: {
       v2: (pair) => `https://v2.info.uniswap.org/pair/${pair}`,
-      v3: (pair) => `https://v2.info.uniswap.org/#/pools/${pair}`,
+      v3: (pair) => `https://v3.info.uniswap.org/#/pools/${pair}`,
     },
   },
 };
