@@ -1,13 +1,19 @@
-import "https://cdn.skypack.dev/preact@v10.5.13/debug";
-import { render } from "https://cdn.skypack.dev/preact@v10.5.13";
+let DEBUG_MODE = false;
+if (new URLSearchParams(window.location.search).get("debug") !== null) {
+  DEBUG_MODE = true;
+  await import(
+    "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact/debug.js"
+  );
+}
+import { render } from "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact.js";
 import {
   useEffect,
   useRef,
   useState,
-} from "https://cdn.skypack.dev/preact@v10.5.13/hooks";
-import { html } from "https://cdn.skypack.dev/htm@v3.0.4/preact";
-import flatpickr from "https://cdn.skypack.dev/flatpickr@v4.6.9";
-import * as timeago from "https://cdn.skypack.dev/timeago.js@v4.0.2";
+} from "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact/hooks.js";
+import { html } from "https://cdn.skypack.dev/pin/htm@v3.0.4-aZI17F33yFkQUSo0D86h/mode=imports,min/unoptimized/preact/index.module.js";
+import flatpickr from "https://cdn.skypack.dev/pin/flatpickr@v4.6.9-uWfGSGUqs8NZNJ1kiIFa/mode=imports,min/optimized/flatpickr.js";
+import * as timeago from "https://cdn.skypack.dev/pin/timeago.js@v4.0.2-oNEoZVrjjqFEIUlrsOxg/mode=imports,min/optimized/timeagojs.js";
 import { newTokensSince } from "./api.js";
 
 const appStartTime = Math.floor(Date.now() / 1000);
@@ -43,7 +49,7 @@ function useInterval(callback, delay) {
       savedCallback.current();
     }
     if (delay !== null) {
-      let id = setInterval(tick, delay);
+      const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
   }, [delay]);
@@ -135,24 +141,20 @@ function App(
   const [since, setSince] = useState(defaultSince);
   const minBlockNum = useRef(0);
 
-  useEffect(async () => {
+  async function update(doNotPaginate = false) {
     let res;
     [res, minBlockNum.current] = await newTokensSince(
       since,
       uniVer === "v3",
+      doNotPaginate ? 0 : minBlockNum.current,
     );
-    setData(res);
-  }, [since, uniVer]);
+    if (res.length !== 0 || doNotPaginate) {
+      setData((doNotPaginate ? [] : data).concat(res));
+    }
+  }
 
-  useInterval(async () => {
-    let res;
-    [res, minBlockNum.current] = await newTokensSince(
-      since,
-      uniVer === "v3",
-      minBlockNum.current,
-    );
-    if (res.length !== 0) setData(data.concat(res));
-  }, refreshInterval * 1000);
+  useEffect(() => update(true), [since, uniVer]);
+  useInterval(update, refreshInterval * 1000);
 
   return html`
   <div class="app">
@@ -175,8 +177,8 @@ function App(
         </label>
         <input id="refreshInterval" type="number" step=${1} min=${1} style=${{
     width: "auto",
-  }} value=${refreshInterval} onChange=${(e) =>
-    setRefreshInterval(e.target.value)}/> seconds
+  }} value=${refreshInterval} onchange=${(e) =>
+    setRefreshInterval(+e.target.value)}/> seconds
       </div>
     </div>
     <main>
