@@ -6,8 +6,12 @@ if (new URLSearchParams(window.location.search).get("debug") !== null) {
     "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact/debug.js"
   );
 }
-import { render } from "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact.js";
 import {
+  createContext,
+  render,
+} from "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact.js";
+import {
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -57,6 +61,8 @@ function useInterval(callback, delay) {
   }, [delay]);
 }
 
+const Version = createContext("v3");
+
 function TimeAgo({ timestamp, update = 1000 }) {
   const [timeAgo, setTimeAgo] = useState(timeago.format(timestamp));
   useInterval(() => setTimeAgo(timeago.format(timestamp)), update);
@@ -67,17 +73,19 @@ function Result(
   {
     token,
     pair,
-    uniVer = "v2",
   },
 ) {
   const when = new Date(pair.createdAtTimestamp * 1000);
+  const uniVer = useContext(Version);
   return html`
   <div class="result">
     <div>
       <b>${token.symbol}</b> (${token.name})
       <br/>
       <b>ID:</b> <code>${token.id}</code>
-      (<a href=${urls.token.uniswap[uniVer](token.id)} target="_blank">Uniswap</a>
+      (<a href=${
+    urls.token.uniswap[uniVer](token.id)
+  } target="_blank">Uniswap</a>
       ${" "}
       <a href=${urls.token.etherscan(token.id)} target="_blank">Etherscan</a>)
     </div>
@@ -97,12 +105,13 @@ function Result(
   `;
 }
 
-function Results({ results, uniVer = "v2" }) {
+function Results({ results }) {
+  const uniVer = useContext(Version);
   return html`
   <div class="results">
     ${
     results.map((result) =>
-      html`<${Result} key=${result.token.id} ...${result} uniVer=${uniVer}/>`
+      html`<${Result} key=${result.token.id} ...${result}/>`
     )
   }
   </div>`;
@@ -186,7 +195,9 @@ function App(
       </div>
     </div>
     <main>
-      <${Results} results=${data} uniVer=${uniVer}/>
+      <${Version.Provider} value=${uniVer}>
+        <${Results} results=${data}/>
+      <//>
     </main>
   </div>
   `;
