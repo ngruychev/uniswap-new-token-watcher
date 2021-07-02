@@ -3,22 +3,19 @@ let DEBUG_MODE = false;
 if (new URLSearchParams(window.location.search).get("debug") !== null) {
   DEBUG_MODE = true;
   await import(
-    "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact/debug.js"
+    "https://cdn.skypack.dev/preact@v10.5.13/debug"
   );
 }
-import {
-  createContext,
-  render,
-} from "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact.js";
+import { createContext, render } from "https://cdn.skypack.dev/preact@v10.5.13";
 import {
   useContext,
   useEffect,
   useRef,
   useState,
-} from "https://cdn.skypack.dev/pin/preact@v10.5.13-m4AUrplPBHJqqRAj3tdw/mode=imports,min/optimized/preact/hooks.js";
-import { html } from "https://cdn.skypack.dev/pin/htm@v3.0.4-aZI17F33yFkQUSo0D86h/mode=imports,min/unoptimized/preact/index.module.js";
-import flatpickr from "https://cdn.skypack.dev/pin/flatpickr@v4.6.9-uWfGSGUqs8NZNJ1kiIFa/mode=imports,min/optimized/flatpickr.js";
-import * as timeago from "https://cdn.skypack.dev/pin/timeago.js@v4.0.2-oNEoZVrjjqFEIUlrsOxg/mode=imports,min/optimized/timeagojs.js";
+} from "https://cdn.skypack.dev/preact@v10.5.13/hooks";
+import { html } from "https://cdn.skypack.dev/htm@v3.0.4/preact";
+import flatpickr from "https://cdn.skypack.dev/flatpickr@v4.6.9";
+import * as timeago from "https://cdn.skypack.dev/timeago.js@v4.0.2";
 import { newTokensSince } from "./api.js";
 
 const appStartTime = Math.floor(Date.now() / 1000);
