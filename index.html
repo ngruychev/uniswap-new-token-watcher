@@ -1,33 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uniswap new token watcher</title>
-    <link rel="preconnect" href="https://cdn.skypack.dev" crossorigin="anonymous">
-    <link rel="preconnect" href="https://unpkg.com" crossorigin="anonymous">
-    <link rel="preconnect" href="https://api.thegraph.com" crossorigin="anonymous">
-    <link rel="dns-prefetch" href="https://cdn.skypack.dev">
-    <link rel="dns-prefetch" href="https://unpkg.com">
-    <link rel="dns-prefetch" href="https://api.thegraph.com">
-    <meta name="description" content="Uniswap new token watcher app">
-    <link rel="preload" href="./style.css" as="style">
-    <script type="importmap">
-      {
-        "imports": {
-          "preact": "https://cdn.skypack.dev/preact@v10.5.13",
-          "preact/": "https://cdn.skypack.dev/preact@v10.5.13/",
-          "htm/": "https://cdn.skypack.dev/htm@v3.0.4/",
-          "flatpickr": "https://cdn.skypack.dev/flatpickr@v4.6.9",
-          "timeago.js": "https://cdn.skypack.dev/timeago.js@v4.0.2"
-        }
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uniswap new token watcher</title>
+  <link rel="preconnect" href="https://ga.jspm.io" crossorigin="anonymous">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin="anonymous">
+  <link rel="preconnect" href="https://api.thegraph.com" crossorigin="anonymous">
+  <link rel="dns-prefetch" href="https://ga.jspm.io">
+  <link rel="dns-prefetch" href="https://unpkg.com">
+  <link rel="dns-prefetch" href="https://api.thegraph.com">
+  <meta name="description" content="Uniswap new token watcher app">
+  <link rel="preload" href="./style.css" as="style">
+
+  <!--
+  JSPM Generator Import Map
+  Edit URL: https://generator.jspm.io/#hc3BDcMgDEBRXzJHJ8AyNEqTG0t0AAuchgYKIt5fjZQBcv160h8AYHi8f5o0S4Q1s7YU9u5HnHCBTYt/IuEIXTioibV4O5+BDOe2sZE4BVrsKsaRs/Qie8lbpakIfyp+j3NF6P6PahMTiQA
+-->
+<script type="importmap">
+  {
+    "imports": {
+      "flatpickr": "https://ga.jspm.io/npm:flatpickr@4.6.9/dist/flatpickr.js",
+      "htm": "https://ga.jspm.io/npm:htm@3.0.4/dist/htm.js",
+      "react": "https://ga.jspm.io/npm:react@18.0.0-alpha-ed6c091fe-20210701/dev.index.js",
+      "react-dom": "https://ga.jspm.io/npm:react-dom@18.0.0-alpha-ed6c091fe-20210701/dev.index.js",
+      "timeago.js": "https://ga.jspm.io/npm:timeago.js@4.0.2/lib/index.js"
+    },
+    "scopes": {
+      "https://ga.jspm.io/": {
+        "object-assign": "https://ga.jspm.io/npm:object-assign@4.1.1/index.js",
+        "process": "https://ga.jspm.io/npm:@jspm/core@2.0.0-beta.7/nodelibs/process.js",
+        "scheduler": "https://ga.jspm.io/npm:scheduler@0.21.0-alpha-ed6c091fe-20210701/dev.index.js"
       }
-    </script>
-    <script defer type="module" src="./index.js"></script>
-    <link rel="stylesheet" href="./style.css">
+    }
+  }
+  </script>
+  
+  <!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+) -->
+  <script async src="https://ga.jspm.io/npm:es-module-shims@0.12.1/dist/es-module-shims.min.js"></script>
+
+  <script defer type="module" src="./index.js"></script>
+  <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
-    <div id="rootDiv"></div>
+  <div id="rootDiv"></div>
 </body>
+
 </html>
