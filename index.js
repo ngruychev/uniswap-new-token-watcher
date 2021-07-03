@@ -2,20 +2,18 @@
 let DEBUG_MODE = false;
 if (new URLSearchParams(window.location.search).get("debug") !== null) {
   DEBUG_MODE = true;
-  await import(
-    "https://cdn.skypack.dev/preact@v10.5.13/debug"
-  );
+  await import("preact/debug");
 }
-import { createContext, render } from "https://cdn.skypack.dev/preact@v10.5.13";
+import { createContext, render } from "preact";
 import {
   useContext,
   useEffect,
   useRef,
   useState,
-} from "https://cdn.skypack.dev/preact@v10.5.13/hooks";
-import { html } from "https://cdn.skypack.dev/htm@v3.0.4/preact";
-import flatpickr from "https://cdn.skypack.dev/flatpickr@v4.6.9";
-import * as timeago from "https://cdn.skypack.dev/timeago.js@v4.0.2";
+} from "preact/hooks";
+import { html } from "htm/preact";
+import flatpickr from "flatpickr";
+import * as timeago from "timeago.js";
 import { newTokensSince } from "./api.js";
 
 const appStartTime = Math.floor(Date.now() / 1000);
