@@ -40,19 +40,19 @@ div#rootDiv:empty::before {
   margin: auto
 }
 
-.results:empty {
+.token-results:empty {
   display: flex;
   width: 100%;
   height: 20em;
 }
 
-.results:empty::before {
+.token-results:empty::before {
   content: "New tokens will appear here";
   margin: auto;
 }
 
 
-.result {
+.token-result {
   border: 0.1em solid black;
   padding: 1em;
   margin: 1em auto;
@@ -60,7 +60,7 @@ div#rootDiv:empty::before {
   overflow-wrap: break-word;
 }
 
-.result:hover {
+.token-result:hover {
   border-color: #9b4dca;
   border-radius: 0.75em;
 }
