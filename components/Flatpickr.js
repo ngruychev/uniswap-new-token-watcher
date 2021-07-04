@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "preact/hooks";
-import { html } from "htm/preact";
+import { useEffect, useRef } from "react";
 import flatpickr from "flatpickr";
+import { html } from "../htmReact.js";
 
 export function Flatpickr({ value, onChange }) {
   const ref = useRef(null);
@@ -20,9 +20,9 @@ export function Flatpickr({ value, onChange }) {
     fpRef.current.setDate(value * 1000);
   }, [value]);
   return html`
-  <div class="row">
-    <input class="column" ref=${ref}/>
-    <button class="button-clear" onclick=${() =>
+  <div className="row">
+    <input className="column" ref=${ref}/>
+    <button className="button-clear" onClick=${() =>
     onChange(Math.floor(Date.now() / 1000))}>Set to now</button>
   </div>
   `;

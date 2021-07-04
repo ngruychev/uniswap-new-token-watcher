@@ -1,7 +1,7 @@
-import { useContext } from "preact/hooks";
-import { html } from "htm/preact";
+import { useContext } from "react";
 import { TimeAgo } from "./TimeAgo.js";
 import { UniswapVersion } from "../contexts/UniswapVersion.js";
+import { html } from "../htmReact.js";
 
 const urls = {
   token: {
@@ -29,7 +29,7 @@ export function TokenResult(
   const when = new Date(pair.createdAtTimestamp * 1000);
   const uniVer = useContext(UniswapVersion);
   return html`
-  <div class="token-result">
+  <div className="token-result">
     <div>
       <b>${token.symbol}</b> (${token.name})
       <br/>

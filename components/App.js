@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useRef, useState } from "react";
 import { useInterval } from "../hooks.js";
 import { Flatpickr } from "./Flatpickr.js";
 import { TokenResults } from "./TokenResults.js";
 import { UniswapVersion } from "../contexts/UniswapVersion.js";
 import { newTokensSince } from "../api/index.js";
-import { html } from "htm/preact";
+import { html } from "../htmReact.js";
 
 const appStartTime = Math.floor(Date.now() / 1000);
 
@@ -37,9 +37,9 @@ export function App(
   useInterval(update, refreshInterval * 1000);
 
   return html`
-  <div class="app">
-    <nav class="row">
-      <div class="column">
+  <div className="app">
+    <nav className="row">
+      <div className="column">
         <label>
             Version: <select value=${uniVer} onChange=${(e) =>
     setUniVer(e.target.value)}>
@@ -48,16 +48,16 @@ export function App(
           </select>
         </label>
       </div>
-      <div class="column">
+      <div className="column">
         <label>Since: <${Flatpickr} value=${since} onChange=${setSince}/></label>
       </div>
-      <div class="column">
-        <label for="refreshInterval" style=${{ "margin-bottom": "auto" }}>
+      <div className="column">
+        <label htmlFor="refreshInterval" style=${{ marginBottom: "auto" }}>
         Update every:
         </label>
         <input id="refreshInterval" type="number" step=${1} min=${1} style=${{
     width: "auto",
-  }} value=${refreshInterval} onchange=${(e) =>
+  }} value=${refreshInterval} onChange=${(e) =>
     setRefreshInterval(+e.target.value)}/> seconds
       </div>
     </div>
