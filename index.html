@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uniswap new token watcher</title>
     <link rel="preconnect" href="https://cdn.skypack.dev" crossorigin="anonymous">
+    <link rel="preconnect" href="https://ga.jspm.io" crossorigin="anonymous">
     <link rel="preconnect" href="https://unpkg.com" crossorigin="anonymous">
     <link rel="preconnect" href="https://api.thegraph.com" crossorigin="anonymous">
     <link rel="dns-prefetch" href="https://cdn.skypack.dev">
+    <link rel="dns-prefetch" href="https://ga.jspm.io">
     <link rel="dns-prefetch" href="https://unpkg.com">
     <link rel="dns-prefetch" href="https://api.thegraph.com">
     <meta name="description" content="Uniswap new token watcher app">
@@ -24,6 +26,8 @@
         }
       }
     </script>
+    <!-- ES Module Shims: Import maps polyfill for modules browsers without import maps support (all except Chrome 89+) -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@0.12.1/dist/es-module-shims.min.js"></script>
     <script defer type="module" src="./index.js"></script>
     <link rel="stylesheet" href="./style.css">
 </head>
