@@ -1,0 +1,28 @@
+{
+  "name": "uniswap-new-token-watcher",
+  "version": "1.0.0",
+  "description": "Find new tokens on Uniswap",
+  "main": "dist/index.html",
+  "repository": "git@github.com:ngruychev/uniswap_new_token_watcher.git",
+  "author": "Nikolay Gruychev <nickick@nickick.tk>",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel public/index.html",
+    "build": "parcel build public/index.html"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.4.0",
+    "flatpickr": "^4.6.9",
+    "htm": "^3.0.4",
+    "milligram": "^1.4.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "timeago-react": "^3.0.3"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.3.1"
+  },
+  "browserslist": [
+    "last 5 Chrome versions"
+  ]
+}
