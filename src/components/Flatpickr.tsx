@@ -1,8 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
+import React, { useEffect, useRef } from 'react';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
-export function Flatpickr({ value, onChange }) {
+interface FlatpickrProps {
+  value: number;
+  onChange: (value: number) => void;
+  id?: string;
+}
+
+export default function Flatpickr({ value, onChange, id = '' }: FlatpickrProps) {
   const ref = useRef(null);
   const fpRef = useRef(null);
   useEffect(() => {
@@ -20,9 +26,10 @@ export function Flatpickr({ value, onChange }) {
     fpRef.current.setDate(value * 1000);
   }, [value]);
   return (
-    <div className="row">
+    <div id={id} className="row">
       <input className="column" ref={ref} />
       <button
+        type="button"
         className="button-clear"
         onClick={() => onChange(Math.floor(Date.now() / 1000))}
       >
@@ -31,3 +38,6 @@ export function Flatpickr({ value, onChange }) {
     </div>
   );
 }
+Flatpickr.defaultProps = {
+  id: '',
+};
