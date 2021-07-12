@@ -1,7 +1,6 @@
-/** @jsx jsx */
 import { useContext } from 'react';
 import TimeAgo from 'timeago-react';
-import { css, jsx } from '@emotion/react';
+import { css } from '@emotion/react';
 import UniswapVersion from '../contexts/UniswapVersion';
 import Token from '../types/Token';
 import Pair from '../types/Pair';

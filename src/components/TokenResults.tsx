@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/** @jsx jsx */
-import { css, jsx } from '@emotion/react';
+import { css } from '@emotion/react';
 import TokenResult from './TokenResult';
 
 const tokenResultsCss = css`

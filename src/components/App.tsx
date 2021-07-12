@@ -1,8 +1,7 @@
-/** @jsx jsx */
 import {
   useEffect, useRef, useState,
 } from 'react';
-import { css, jsx } from '@emotion/react';
+import { css } from '@emotion/react';
 import { useId } from 'react-id-generator';
 import useInterval from '../hooks/useInterval';
 import Flatpickr from './Flatpickr';

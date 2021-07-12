@@ -18,7 +18,8 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "@emotion"
     ],
     "rules": {
       "jsx-a11y/label-has-associated-control": ["error", {
@@ -30,6 +31,11 @@
         "required": {
           "some": ["nesting", "id"]
         }
-      }]
+      }],
+      // do not import @emotion/css, import @emotion/react instead
+      "@emotion/no-vanilla": "error",
+      // because emotion and babel
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off"
     }
 }
