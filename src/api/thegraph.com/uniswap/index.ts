@@ -16,18 +16,12 @@ async function paginatedPairsWithTxCount1(
   fromMinBlockNum = 0,
 ): [Pair[], number] {
   let minBlockNum = fromMinBlockNum;
+  let blockHeight = -1;
   let all = [];
   for (;;) {
-    // eslint-disable-next-line no-await-in-loop
-    const res = await graphQuery(
-      isv3 ? v3Url : v2Url,
-      `
-      query ${
-  isv3 ? 'Pools' : 'Pairs'
-}WithTxCount1($timestamp: BigInt! $minBlockNum: BigInt!) {
-        ${
-  isv3 ? 'pools' : 'pairs'
-}(first: 1000 orderBy: createdAtTimestamp orderDirection: desc where: { txCount: 1 createdAtBlockNumber_gt: $minBlockNum createdAtTimestamp_gt: $timestamp }) {
+    const query = `
+      query ${isv3 ? 'Pools' : 'Pairs'}WithTxCount1($timestamp: BigInt! $minBlockNum: BigInt! $blockHeight: Int!) {
+        ${isv3 ? 'pools' : 'pairs'}(${blockHeight !== -1 ? 'block: { number: $blockHeight } ' : ''}first: 1000 orderBy: createdAtTimestamp orderDirection: desc where: { txCount: 1 createdAtBlockNumber_gt: $minBlockNum createdAtTimestamp_gt: $timestamp }) {
           id
           createdAtBlockNumber
           createdAtTimestamp
@@ -46,20 +40,34 @@ async function paginatedPairsWithTxCount1(
             symbol
           }
         }
+        _meta {
+          block {
+            number
+            hash
+          }
+        }
       }
-      `,
-      {
-        timestamp,
-        minBlockNum,
-      },
-    );
+    `;
+    // eslint-disable-next-line no-await-in-loop
+    const res = await graphQuery(isv3 ? v3Url : v2Url, query, {
+      timestamp,
+      minBlockNum,
+      blockHeight,
+    });
     all = all.concat(res.data[isv3 ? 'pools' : 'pairs']);
     if (res.data[isv3 ? 'pools' : 'pairs'].length === 0) break;
+    // set the next query to seek after the newest token we have right now
     minBlockNum = res.data[isv3 ? 'pools' : 'pairs']
       .map((p) => p.createdAtBlockNumber)
       .map((block) => BigInt(block))
       .reduce((a, b) => (a > b ? a : b))
       .toString();
+    // lock the block height to the one from the first query, for consistency
+    // eslint-disable-next-line no-underscore-dangle
+    if (blockHeight !== -1) blockHeight = res.data._meta.block.number;
+    // The Graph limits queries to 1000 results
+    // if we have less than 1000, it is safe to assume we don't have any more results
+    // https://uniswap.org/docs/v2/API/queries/#:~:text=The%20Graph%20limits%20entity%20return%20amounts%20to%201000%20per%20query%20as%20of%20now
     if (res.data[isv3 ? 'pools' : 'pairs'].length < 1000) break;
   }
   return [all, minBlockNum];
